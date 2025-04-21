@@ -65,7 +65,7 @@ for filename in sorted(os.listdir(LOG_DIR)):
     if day and duration:
         playtime_per_day[day] += duration
 
-print("=== Playtime (based on start/load and save line) per Day (last 1 year) ===")
+print("=== Playtime per Day ===")
 for day in sorted(playtime_per_day.keys()):
     total = playtime_per_day[day]
     hours, remainder = divmod(total.total_seconds(), 3600)
