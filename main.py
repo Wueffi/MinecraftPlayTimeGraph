@@ -61,16 +61,20 @@ for filename in sorted(os.listdir(LOG_DIR)):
     else:
         file_date = datetime.today()
 
+    print(f"Found a log from: {file_date}")
+
     day, duration = read_session_times(filepath, is_gz, file_date)
     if day and duration:
         playtime_per_day[day] += duration
 
+TOTAL = 0
 print("=== Playtime per Day ===")
 for day in sorted(playtime_per_day.keys()):
     total = playtime_per_day[day]
     hours, remainder = divmod(total.total_seconds(), 3600)
     minutes, seconds = divmod(remainder, 60)
     print(f"{day}: {int(hours)}h {int(minutes)}m {int(seconds)}s")
+    TOTAL = TOTAL + total.total_seconds()
 
 series_data = {
     pd.Timestamp(date): duration.total_seconds() / 3600
@@ -91,6 +95,10 @@ calmap.calendarplot(
     yearlabels=True,
     yearlabel_kws={'color': 'black', 'fontsize': 14}
 )
-plt.suptitle('Minecraft Playtime per Day', fontsize=18)
+total = TOTAL
+hours, remainder = divmod(total, 3600)
+days, hours = divmod(hours, 24)
+minutes, seconds = divmod(remainder, 60)
+plt.suptitle(f"Total playtime: {int(days)}d {int(hours)}h {int(minutes)}m {int(seconds)}s", fontsize=18)
 plt.tight_layout()
 plt.show()
